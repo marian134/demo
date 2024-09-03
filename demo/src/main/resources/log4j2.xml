@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+
+        <property name="logging.path" >${bundle: application:spring.logging.path}  </property>
+        <property name="max.size" >${bundle: application:spring.max.size}  </property>
+        <property name="application.name" >${bundle: application:spring.application.name}  </property>
+    </Properties>
+
+    <Appenders>
+
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout >
+                    <pattern>="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n"</pattern>
+            </PatternLayout >
+        </Console>
+
+        <!-- Appender para archivos rotativos -->
+        <RollingFile name="RollingFile"
+                     fileName="${logging.path}/${application,name.log}"
+                     filePattern="${logging.path}/${application,name}-%d{dd-MMMM-yyyy}-%1.log.gz">
+
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+        </RollingFile>
+</Appenders>
+
+    <Loggers>
+        <!-- Logger raíz -->
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="FileAppender"/>
+        </Root>
+
+        <!-- Logger específico para paquetes o clases -->
+        <Logger name="com.example" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+    </Loggers>
+</Configuration>
